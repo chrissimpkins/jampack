@@ -55,12 +55,22 @@ def main():
     if c.argc == 0:
         # pack the current working directory
         directory_name = os.path.basename(os.getcwd())
+        directory_size = get_directory_size(".")
         package(directory_name, ".")
-        stdout("[✓] jampack")
+        archive_name = directory_name + ".tar.gz"
+        percent_filesize = (100 * ((get_file_size(archive_name) / float(directory_size))))
+        display_percent = str(int(percent_filesize))
+        stdout("[✓] jampack: " + archive_name + " created " + "[~" + display_percent + "% original]")
         sys.exit(0)
     elif c.argc > 0:
         # pack the explicitly set directory
-        pass
+        if c.arg0 == "zip":
+            pass
+        elif c.arg0 == "bzip":
+            pass
+        else:
+            # tar.gz the rest of the directories
+            pass
 
     #------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
@@ -77,6 +87,19 @@ def exclude_files(tarinfo):
         return None
     else:
         return tarinfo
+
+def get_directory_size(the_directory):
+    total_size = os.path.getsize(the_directory)
+    for item in os.listdir(the_directory):
+        itempath = os.path.join(the_directory, item)
+        if os.path.isfile(itempath):
+            total_size += os.path.getsize(itempath)
+        elif os.path.isdir(itempath):
+            total_size += get_directory_size(itempath)
+    return total_size
+
+def get_file_size(the_file):
+    return os.path.getsize(the_file)
 
 
 def package(archive_name, root_directory):
