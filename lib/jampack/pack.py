@@ -217,8 +217,11 @@ def package_zip(archive_name, root_directory):
                 archive_file_list.append((os.path.relpath(os.path.join(root, the_file))))
         zipper = zipfile.ZipFile(archive_zip_name, 'w')
         for zip_file in archive_file_list:
-            # TODO: remove .DS_Store files 
-            zipper.write(zip_file, compress_type=compression)
+            # do not include OS X .DS_Store files in the archive
+            if os.path.basename(zip_file) == ".DS_Store":
+                pass
+            else:
+                zipper.write(zip_file, compress_type=compression)
         zipper.close()
 
         # change to the original working directory if the directory was changed
