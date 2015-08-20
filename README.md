@@ -101,7 +101,7 @@ Maximum compression level (compression level 9) is always used for gzip and bzip
 unjam [archive file path]
 ```
 
-Simply enter the archive file path as an argument to the `unjam` executable to decompress and unpack the archive file in the current working directory.  The archive type is detected by examination of the file extension in a case-insensitive manner.
+Simply enter the archive file path as an argument to the `unjam` executable to decompress and unpack the archive file in the current working directory.  The archive and compression types are detected by examination of the file extension in a case-insensitive manner.
 
 
 ### License
