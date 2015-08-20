@@ -29,7 +29,7 @@ def version_read():
 setup(
     name='jampack',
     version=version_read(),
-    description='Simple tar.gz and zip archives for everyone',
+    description='Simple file archives for everyone',
     long_description=(docs_read('README.rst')),
     url='https://github.com/chrissimpkins/jampack',
     license='MIT license',
@@ -45,7 +45,7 @@ setup(
     packages=find_packages("lib"),
     package_dir={'': 'lib'},
     install_requires=['Naked'],
-    keywords='tar, gz, gzip, zip, archive, package, unpack, pack',
+    keywords='tar, gz, gzip, zip, archive, package, unpack, pack, jampack, jam, unjam',
     include_package_data=True,
     classifiers=[],
 )
