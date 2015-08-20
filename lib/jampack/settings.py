@@ -50,7 +50,7 @@ help = """
  Decompress and Unpack Archive
  =============================
 
-   unjam [archive path]
+   unjam <archive path>
 
  Include the archive path as the argument for this command.  The archive type is interpreted from the file extension.
 """

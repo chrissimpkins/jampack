@@ -30,7 +30,7 @@ def version_read():
 setup(
     name='jampack',
     version=version_read(),
-    description='Simple file archives for everyone (tar.gz + tar.bz2 + .zip)',
+    description='Simple file archives for everyone (tar.gz + tar.bz2 + zip)',
     long_description=(docs_read('README.rst')),
     url='https://github.com/chrissimpkins/jampack',
     license='MIT license',
@@ -49,5 +49,17 @@ setup(
     install_requires=['Naked'],
     keywords='tar, gz, gzip, zip, bzip, bzip2, bz2, archive, package, unpack, pack, jampack, jam, unjam',
     include_package_data=True,
-    classifiers=[],
+    classifiers=[
+        'Intended Audience :: End Users/Desktop',
+        'Development Status :: 4 - Beta',
+        'Natural Language :: English',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX',
+        'Operating System :: Unix',
+        'Operating System :: Microsoft :: Windows'
+    ],
 )
