@@ -19,7 +19,6 @@ from Naked.toolshed.system import stdout, stderr
 def main():
     import sys
     from Naked.commandline import Command
-    from Naked.toolshed.state import StateObject
 
     # ------------------------------------------------------------------------------------------
     # [ Instantiate command line object ]
@@ -48,7 +47,7 @@ def main():
     # [ PRIMARY COMMAND LOGIC ]
     # ------------------------------------------------------------------------------------------
     if c.argc == 0:
-        # pack the current working directory with default tar.gz compressed archive
+        # tar.gz pack the current working directory
         directory_name = os.path.basename(os.getcwd())
         directory_size = get_directory_size(".")
         package_targz(directory_name, ".")
@@ -59,10 +58,34 @@ def main():
         sys.exit(0)
     elif c.argc > 0:
         if c.arg0 == "zip":
-            pass
+            if c.argc == 1:
+                # zip pack the current working directory
+                directory_name = os.path.basename(os.getcwd())
+                directory_size = get_directory_size(".")
+                package_zip(directory_name, ".")
+                archive_name = directory_name + ".zip"
+                percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
+                display_percent = str(int(percent_filesize))
+                stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                sys.exit(0)
+            else:
+                directory_list = c.argv[1:]
+                for a_directory in directory_list:
+                    if os.path.isdir(a_directory):
+                        directory_name = os.path.basename(a_directory)
+                        directory_size = get_directory_size(a_directory)
+                        package_zip(directory_name, a_directory)
+                        archive_name = directory_name + ".zip"
+                        percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
+                        display_percent = str(int(percent_filesize))
+                        stdout(
+                            "[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                    else:
+                        stderr("[\033[91mX\033[0m] " + a_directory + " is not a directory path")
+                sys.exit(0)
         elif c.arg0 == "bz2":
             if c.argc == 1:
-                # pack the current working directory
+                # bz2 pack the current working directory
                 directory_name = os.path.basename(os.getcwd())
                 directory_size = get_directory_size(".")
                 package_bzip2(directory_name, ".")
@@ -151,7 +174,7 @@ def package_targz(archive_name, root_directory):
     except Exception as e:
         os.chdir(current_dir)
         tar.close()
-        stderr("[!] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        stderr("[\033[91m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
 
 
 def package_bzip2(archive_name, root_directory):
@@ -169,7 +192,43 @@ def package_bzip2(archive_name, root_directory):
     except Exception as e:
         os.chdir(current_dir)
         tar.close()
-        stderr("[!] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        stderr("[\033[91m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+
+
+def package_zip(archive_name, root_directory):
+    # attempt to import zlib for compression
+    try:
+        import zlib
+        compression = zipfile.ZIP_DEFLATED
+    except ImportError:
+        compression = zipfile.ZIP_STORED
+
+    try:
+        archive_zip_name = archive_name + '.zip'
+        archive_file_list = []
+        current_dir = os.getcwd()
+
+        # change to the target directory if explicitly requested
+        if root_directory is not ".":
+            os.chdir(root_directory)
+
+        for root, dirs, files in os.walk(os.getcwd()):
+            for the_file in files:
+                archive_file_list.append((os.path.relpath(os.path.join(root, the_file))))
+        zipper = zipfile.ZipFile(archive_zip_name, 'w')
+        for zip_file in archive_file_list:
+            # TODO: remove .DS_Store files 
+            zipper.write(zip_file, compress_type=compression)
+        zipper.close()
+
+        # change to the original working directory if the directory was changed
+        if root_directory is not ".":
+            shutil.move(archive_zip_name, os.path.join(current_dir, archive_zip_name))
+            os.chdir(current_dir)
+    except Exception as e:
+        os.chdir(current_dir)
+        zipper.close()
+        stderr("[\033[91m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
 
 if __name__ == '__main__':
     main()
