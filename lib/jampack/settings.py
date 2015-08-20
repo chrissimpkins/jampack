@@ -23,7 +23,7 @@ debug = False
 # ------------------------------------------------------------------------------
 usage = """
 jam [command] [directory path]
-unjam [command] [archive path]
+unjam [archive path]
 
 Use 'jam help' or 'unjam help' for additional information
 """
@@ -33,7 +33,7 @@ Use 'jam help' or 'unjam help' for additional information
 # ------------------------------------------------------------------------------
 help = """
 -------------------------------------------------
- jampack
+ JamPack
  Simple file archives for everyone
  Copyright 2015 Christopher Simpkins
  MIT license
@@ -51,4 +51,6 @@ help = """
  =============================
 
    unjam [archive path]
+
+ Include the archive path as the argument for this command.  The archive type is interpreted from the file extension.
 """

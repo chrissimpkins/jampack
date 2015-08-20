@@ -7,7 +7,6 @@ import tarfile
 import zipfile
 from Naked.toolshed.system import stdout, stderr
 
-
 # ------------------------------------------------------------------------------
 # jampack
 # Copyright 2015 Christopher Simpkins
@@ -21,15 +20,11 @@ def main():
     from Naked.commandline import Command
 
     # ------------------------------------------------------------------------------------------
-    # [ Instantiate command line object ]
+    # [ Instantiate Naked framework command line object ]
     #   used for all subsequent conditional logic in the CLI application
     # ------------------------------------------------------------------------------------------
     c = Command(sys.argv[0], sys.argv[1:])
-    # ------------------------------------------------------------------------------------------
-    # [ NAKED FRAMEWORK COMMANDS ]
-    # Naked framework provides default help, usage, and version commands for all applications
-    #   --> settings for user messages are assigned in the lib/jampack/settings.py file
-    # ------------------------------------------------------------------------------------------
+
     if c.help():      # User requested jampack help information
         from jampack.settings import help as jampack_help
         print(jampack_help)
