@@ -75,7 +75,15 @@ $ jam mydirectory
 
 The above command creates a tar.gz archive of the subdirectory `mydirectory` and the archive write takes place in the current working directory. The top level of the destination directory is always used as the root directory for your new archive irrespective of the depth from the current working directory.
 
-Add a `bz2` or `zip` secondary command followed by the directory path(s) to create tar.bz2 and zip archives (see Secondary Commands section above).
+Add a `bz2` or `zip` secondary command followed by the directory path(s) to create tar.bz2 and zip archives.  For example, 
+
+```shell
+$ jam bz2 mydirectory
+```
+
+```shell
+$ jam zip mydirectory
+```
 
 #### OS X Only
 
