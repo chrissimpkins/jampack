@@ -85,12 +85,12 @@ $ jam bz2 mydirectory
 $ jam zip mydirectory
 ```
 
-#### Compression of Archives
+##### Compression of Archives
 
 Maximum compression level (compression level 9) is always used for gzip and bzip2 compression.  zip compression is maximized if your system includes a zlib install, otherwise the system default compression level is used.
 
 
-#### OS X Only
+##### OS X Only
 
 `.DS_Store` files are excluded from all archive types by default.
 
