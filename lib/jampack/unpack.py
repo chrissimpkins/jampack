@@ -49,12 +49,15 @@ def main():
                 if lowercase_archive_name.endswith('.zip'):
                     zipper = zipfile.ZipFile(archive_name, mode="r")
                     zipper.extractall()
+                    stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked." )
                 elif lowercase_archive_name.endswith('.tar.gz') or lowercase_archive_name.endswith('.tgz') or lowercase_archive_name.endswith('.tar.gzip'):
                     tarball = tarfile.open(archive_name, mode="r:gz")
                     tarball.extractall()
+                    stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
                 elif lowercase_archive_name.endswith('.tar.bz2') or lowercase_archive_name.endswith('.tar.bzip2'):
                     bzball = tarfile.open(archive_name, mode="r:bz2")
                     bzball.extractall()
+                    stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
                 else:
                     stderr("[\033[91m!\033[0m] jampack: Unable to identify the archive type for '" + archive_name + "'. This archive was not unpacked. Please check the file extension and try again.")
         except Exception as e:
