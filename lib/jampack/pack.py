@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 
 import os
 import shutil
@@ -196,14 +196,14 @@ def package_bzip2(archive_name, root_directory):
 
 
 def package_zip(archive_name, root_directory):
-    # attempt to import zlib for compression
     try:
-        import zlib
-        compression = zipfile.ZIP_DEFLATED
-    except ImportError:
-        compression = zipfile.ZIP_STORED
+        # attempt to import zlib for compression, fall back to default if not installed
+        try:
+            import zlib
+            compression = zipfile.ZIP_DEFLATED
+        except ImportError:
+            compression = zipfile.ZIP_STORED
 
-    try:
         archive_zip_name = archive_name + '.zip'
         archive_file_list = []
         current_dir = os.getcwd()
@@ -217,7 +217,7 @@ def package_zip(archive_name, root_directory):
                 archive_file_list.append((os.path.relpath(os.path.join(root, the_file))))
         zipper = zipfile.ZipFile(archive_zip_name, 'w')
         for zip_file in archive_file_list:
-            # do not include OS X .DS_Store files in the archive
+            # do not include OS X .DS_Store files in archives
             if os.path.basename(zip_file) == ".DS_Store":
                 pass
             else:

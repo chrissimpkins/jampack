@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 def docs_read(fname):
     return open(os.path.join(os.path.dirname(__file__), 'docs', fname)).read()
 
+
 def version_read():
     settings_file = open(os.path.join(os.path.dirname(__file__), 'lib', 'jampack', 'settings.py')).read()
     major_regex = """major_version\s*?=\s*?["']{1}(\d+)["']{1}"""
@@ -38,6 +39,7 @@ setup(
     platforms=['any'],
     entry_points = {
         'console_scripts': [
+            'jampack = jampack.jp:main',
             'jam = jampack.pack:main',
             'unjam = jampack.unpack:main'
         ],
