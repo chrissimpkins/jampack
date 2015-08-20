@@ -48,7 +48,7 @@ def main():
     # [ PRIMARY COMMAND LOGIC ]
     # ------------------------------------------------------------------------------------------
     if c.argc == 0:
-        # pack the current working directory
+        # pack the current working directory with default tar.gz compressed archive
         directory_name = os.path.basename(os.getcwd())
         directory_size = get_directory_size(".")
         package_targz(directory_name, ".")
@@ -58,11 +58,36 @@ def main():
         stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
         sys.exit(0)
     elif c.argc > 0:
-        # pack the explicitly set directory
         if c.arg0 == "zip":
             pass
-        elif c.arg0 == "bzip":
-            pass
+        elif c.arg0 == "bz2":
+            if c.argc == 1:
+                # pack the current working directory
+                directory_name = os.path.basename(os.getcwd())
+                directory_size = get_directory_size(".")
+                package_bzip2(directory_name, ".")
+                archive_name = directory_name + ".tar.bz2"
+                percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
+                display_percent = str(int(percent_filesize))
+                stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                sys.exit(0)
+            else:
+                # bz2 pack one or more explicitly set directory
+                directory_list = c.argv[1:]
+                for a_directory in directory_list:
+                    if os.path.isdir(a_directory):
+                        directory_name = os.path.basename(a_directory)
+                        directory_size = get_directory_size(a_directory)
+                        package_bzip2(directory_name, a_directory)
+                        archive_name = directory_name + ".tar.bz2"
+                        percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
+                        display_percent = str(int(percent_filesize))
+                        stdout(
+                            "[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                    else:
+                        stderr("[\033[91mX\033[0m] " + a_directory + " is not a directory path")
+
+                sys.exit(0)
         else:
             # tar.gz one or more explicitly defined directories
             for a_directory in c.argv:
@@ -119,6 +144,24 @@ def package_targz(archive_name, root_directory):
         archive_gz_name = archive_name + ".tar.gz"
         tar = tarfile.open(archive_gz_name, mode="w:gz", compresslevel=9)    # file writes to current working directory
         tar.add(".", filter=exclude_files)     # make tar.gz archive
+        tar.close()
+        if root_directory is not ".":
+            shutil.move(archive_gz_name, os.path.join(current_dir, archive_gz_name))  # move file to working directory
+            os.chdir(current_dir)  # navigate back to user's current working directory
+    except Exception as e:
+        os.chdir(current_dir)
+        tar.close()
+        stderr("[!] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+
+
+def package_bzip2(archive_name, root_directory):
+    try:
+        if root_directory is not ".":
+            current_dir = os.getcwd()
+            os.chdir(root_directory)  # navigate to the root directory to add the files to the archive
+        archive_gz_name = archive_name + ".tar.bz2"
+        tar = tarfile.open(archive_gz_name, mode="w:bz2", compresslevel=9)  # file writes to current working directory
+        tar.add(".", filter=exclude_files)  # make tar.gz archive
         tar.close()
         if root_directory is not ".":
             shutil.move(archive_gz_name, os.path.join(current_dir, archive_gz_name))  # move file to working directory
