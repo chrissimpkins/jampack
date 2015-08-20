@@ -14,6 +14,7 @@ JamPack includes the executables `jam` and `unjam` that provide a simple approac
 - [Install Guide](https://github.com/chrissimpkins/jampack#install)
 - [`jam` Usage](https://github.com/chrissimpkins/jampack#jam-usage)
 - [`unjam` Usage](https://github.com/chrissimpkins/jampack#unjam-usage)
+- [License](https://github.com/chrissimpkins/jampack/LICENSE)
 
 
 ### Install
