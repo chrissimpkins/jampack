@@ -40,7 +40,7 @@ You can safely discard the source repository after you use this command.
 jam [secondary command] [directory path]
 ```
 
-##### Defaults
+##### Default Behavior
 
 `jam` defaults to a tar.gz archive of the current working directory.  To create this simply navigate to the directory and enter:
 
@@ -85,6 +85,11 @@ $ jam bz2 mydirectory
 $ jam zip mydirectory
 ```
 
+#### Compression of Archives
+
+Maximum compression level (compression level 9) is always used for gzip and bzip2 compression.  zip compression is maximized if your system includes a zlib install, otherwise the system default compression level is used.
+
+
 #### OS X Only
 
 `.DS_Store` files are excluded from all archive types by default.
@@ -92,7 +97,16 @@ $ jam zip mydirectory
 
 ### `unjam` Usage
 
+```
+unjam [archive file path]
+```
 
+Simply enter the archive file path as an argument to the `unjam` executable to decompress and unpack the archive file in the current working directory.  The archive type is detected by examination of the file extension in a case-insensitive manner.
+
+
+### License
+
+[MIT license](https://github.com/chrissimpkins/jampack/LICENSE)
 
 
 
