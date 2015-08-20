@@ -51,7 +51,7 @@ def main():
         # pack the current working directory
         directory_name = os.path.basename(os.getcwd())
         directory_size = get_directory_size(".")
-        package(directory_name, ".")
+        package_targz(directory_name, ".")
         archive_name = directory_name + ".tar.gz"
         percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
         display_percent = str(int(percent_filesize))
@@ -64,8 +64,20 @@ def main():
         elif c.arg0 == "bzip":
             pass
         else:
-            # tar.gz the rest of the directories
-            pass
+            # tar.gz one or more explicitly defined directories
+            for a_directory in c.argv:
+                if os.path.isdir(a_directory):
+                    directory_name = os.path.basename(a_directory)
+                    directory_size = get_directory_size(a_directory)
+                    package_targz(directory_name, a_directory)
+                    archive_name = directory_name + ".tar.gz"
+                    percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
+                    display_percent = str(int(percent_filesize))
+                    stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                else:
+                    stderr("[\033[91mX\033[0m] " + a_directory + " is not a directory path")
+
+            sys.exit(0)
 
     # ------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
@@ -99,7 +111,7 @@ def get_file_size(the_file):
     return os.path.getsize(the_file)
 
 
-def package(archive_name, root_directory):
+def package_targz(archive_name, root_directory):
     try:
         if root_directory is not ".":
             current_dir = os.getcwd()
@@ -109,6 +121,7 @@ def package(archive_name, root_directory):
         tar.add(".", filter=exclude_files)     # make tar.gz archive
         tar.close()
         if root_directory is not ".":
+            shutil.move(archive_gz_name, os.path.join(current_dir, archive_gz_name))  # move file to working directory
             os.chdir(current_dir)  # navigate back to user's current working directory
     except Exception as e:
         os.chdir(current_dir)
