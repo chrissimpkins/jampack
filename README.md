@@ -25,7 +25,7 @@ JamPack requires Python v2.6+ or v3.2+ and you can install it with pip:
 $ pip install jampack
 ```
 
-or download the source repository, unpack it locally, navigate to the root directory, and run the command:
+or [download the source repository](https://github.com/chrissimpkins/jampack/archive/master.zip), unpack it locally, navigate to the root directory, and run the command:
 
 ```shell
 $ python setup.py install
