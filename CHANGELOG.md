@@ -1,6 +1,6 @@
 ## Version 0.9.2
 
-- bugfix: fixed error in progress bar display when two or more directories are archived
+- **bugfix**: fixed error in progress bar display when two or more directories are archived
 
 ## Version 0.9.1
 
