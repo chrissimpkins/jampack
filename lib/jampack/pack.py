@@ -26,6 +26,8 @@ def main():
     import sys
     from Naked.commandline import Command
 
+    global PROGRESS_INDICATOR
+
     # ------------------------------------------------------------------------------------------
     # [ Instantiate Naked framework command line object ]
     #   used for all subsequent conditional logic in the CLI application
@@ -76,6 +78,7 @@ def main():
                 directory_list = c.argv[1:]
                 for a_directory in directory_list:
                     if os.path.isdir(a_directory):
+                        PROGRESS_INDICATOR = 1  # reset the progress indicator on each new archive that is processed
                         directory_name = os.path.basename(a_directory)
                         directory_size = get_directory_size(a_directory)
                         package_zip(directory_name, a_directory)
@@ -105,6 +108,7 @@ def main():
                 directory_list = c.argv[1:]
                 for a_directory in directory_list:
                     if os.path.isdir(a_directory):
+                        PROGRESS_INDICATOR = 1  # reset the progress indicator on each new archive that is processed
                         directory_name = os.path.basename(a_directory)
                         directory_size = get_directory_size(a_directory)
                         package_bzip2(directory_name, a_directory)
@@ -122,6 +126,7 @@ def main():
             # tar.gz one or more explicitly defined directories
             for a_directory in c.argv:
                 if os.path.isdir(a_directory):
+                    PROGRESS_INDICATOR = 1  # reset the progress indicator on each new archive that is processed
                     directory_name = os.path.basename(a_directory)
                     directory_size = get_directory_size(a_directory)
                     package_targz(directory_name, a_directory)
