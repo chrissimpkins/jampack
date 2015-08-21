@@ -107,7 +107,7 @@ unjam [archive file path]
 
 Simply enter the archive file path as an argument to the `unjam` executable to decompress and unpack the archive file in the current working directory.  The archive and compression types are detected by examination of the file extension in a case-insensitive manner.
 
-Note that this will unpack the contents of archives generated with `jam` using the working directory as the root, not a subdirectory of a working directory.  Place your archive files in the directory where you would like the contents to be unpacked before use. 
+Note that this will unpack the contents of archives generated with `jam` using the working directory as the root, not a subdirectory of the working directory.  Place your archive files in the directory where you would like the contents to be unpacked before use. 
 
 ### License
 
