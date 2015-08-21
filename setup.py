@@ -46,7 +46,7 @@ setup(
     },
     packages=find_packages("lib"),
     package_dir={'': 'lib'},
-    install_requires=['Naked'],
+    install_requires=['Naked', 'colorama'],
     keywords='tar, gz, gzip, zip, bzip, bzip2, bz2, archive, package, unpack, pack, jampack, jam, unjam',
     include_package_data=True,
     classifiers=[

@@ -11,6 +11,10 @@ import zipfile
 import tarfile
 from Naked.toolshed.system import stdout, stderr
 
+# start colorama for colored CLI std output
+from colorama import init
+init()
+
 
 # Application start
 def main():
@@ -47,29 +51,38 @@ def main():
             for archive_name in c.argv:
                 lowercase_archive_name = archive_name.lower()
                 if lowercase_archive_name.endswith('.zip'):
-                    zipper = zipfile.ZipFile(archive_name, mode="r")
-                    zipper.extractall()
-                    stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked." )
+                    if zipfile.is_zipfile(archive_name):
+                        zipper = zipfile.ZipFile(archive_name, mode="r")
+                        zipper.extractall()
+                        stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked." )
+                    else:
+                        stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a zip file")
                 elif lowercase_archive_name.endswith('.tar.gz') or lowercase_archive_name.endswith('.tgz') or lowercase_archive_name.endswith('.tar.gzip'):
-                    tarball = tarfile.open(archive_name, mode="r:gz")
-                    tarball.extractall()
-                    stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
+                    if tarfile.is_tarfile(archive_name):
+                        tarball = tarfile.open(archive_name, mode="r:gz")
+                        tarball.extractall()
+                        stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
+                    else:
+                        stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a tar archive")
                 elif lowercase_archive_name.endswith('.tar.bz2') or lowercase_archive_name.endswith('.tar.bzip2'):
-                    bzball = tarfile.open(archive_name, mode="r:bz2")
-                    bzball.extractall()
-                    stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
+                    if tarfile.is_tarfile(archive_name):
+                        bzball = tarfile.open(archive_name, mode="r:bz2")
+                        bzball.extractall()
+                        stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
+                    else:
+                        stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a tar archive")
                 else:
-                    stderr("[\033[91m!\033[0m] jampack: Unable to identify the archive type for '" + archive_name + "'. This archive was not unpacked. Please check the file extension and try again.")
+                    stderr("[\033[31m!\033[0m] jampack: Unable to identify the archive type for '" + archive_name + "'. This archive was not unpacked. Please check the file extension and try again.")
         except Exception as e:
             stderr(
-                "[\033[91m!\033[0m] jampack: Unable to unpack the archive '" + archive_name + "'. Error: " + str(e))
+                "[\033[31m!\033[0m] jampack: Unable to unpack the archive '" + archive_name + "'. Error: " + str(e))
 
     # ------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
     #  Message to provide to the user when all above conditional logic fails to meet a true condition
     # ------------------------------------------------------------------------------------------
     else:
-        print("Could not complete the command that you entered.  Please try again.")
+        print("[\033[31mX\033[0m] Could not complete the command that you entered.  Please try again.")
         sys.exit(1)  # exit
 
 if __name__ == '__main__':

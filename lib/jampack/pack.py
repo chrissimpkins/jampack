@@ -1,17 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# ------------------------------------------------------------------------------
+# jampack
+# Copyright 2015 Christopher Simpkins
+# MIT license
+# ------------------------------------------------------------------------------
+
 import os
 import shutil
 import tarfile
 import zipfile
 from Naked.toolshed.system import stdout, stderr
 
-# ------------------------------------------------------------------------------
-# jampack
-# Copyright 2015 Christopher Simpkins
-# MIT license
-# ------------------------------------------------------------------------------
+# start colorama for colored CLI std output
+from colorama import init
+init()
 
 
 # Application start
@@ -76,7 +80,7 @@ def main():
                         stdout(
                             "[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                     else:
-                        stderr("[\033[91mX\033[0m] " + a_directory + " is not a directory path")
+                        stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
                 sys.exit(0)
         elif c.arg0 == "bz2":
             if c.argc == 1:
@@ -103,7 +107,7 @@ def main():
                         stdout(
                             "[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                     else:
-                        stderr("[\033[91mX\033[0m] " + a_directory + " is not a directory path")
+                        stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
 
                 sys.exit(0)
         else:
@@ -118,7 +122,7 @@ def main():
                     display_percent = str(int(percent_filesize))
                     stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                 else:
-                    stderr("[\033[91mX\033[0m] " + a_directory + " is not a directory path")
+                    stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
 
             sys.exit(0)
 
@@ -127,7 +131,7 @@ def main():
     #  Message to provide to the user when all above conditional logic fails to meet a true condition
     # ------------------------------------------------------------------------------------------
     else:
-        print("Could not complete the command that you entered.  Please try again.")
+        print("[\033[31mX\033[0m] Could not complete the command that you entered.  Please try again.")
         sys.exit(1)  # exit
 
 
@@ -169,7 +173,7 @@ def package_targz(archive_name, root_directory):
     except Exception as e:
         os.chdir(current_dir)
         tar.close()
-        stderr("[\033[91m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        stderr("[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
 
 
 def package_bzip2(archive_name, root_directory):
@@ -187,7 +191,7 @@ def package_bzip2(archive_name, root_directory):
     except Exception as e:
         os.chdir(current_dir)
         tar.close()
-        stderr("[\033[91m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        stderr("[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
 
 
 def package_zip(archive_name, root_directory):
@@ -226,7 +230,7 @@ def package_zip(archive_name, root_directory):
     except Exception as e:
         os.chdir(current_dir)
         zipper.close()
-        stderr("[\033[91m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        stderr("[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
 
 if __name__ == '__main__':
     main()
