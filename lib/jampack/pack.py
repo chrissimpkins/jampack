@@ -8,6 +8,7 @@
 # ------------------------------------------------------------------------------
 
 import os
+import sys
 import shutil
 import tarfile
 import zipfile
@@ -16,6 +17,8 @@ from Naked.toolshed.system import stdout, stderr
 # start colorama for colored CLI std output
 from colorama import init
 init()
+
+PROGRESS_INDICATOR = 1
 
 
 # Application start
@@ -53,6 +56,7 @@ def main():
         archive_name = directory_name + ".tar.gz"
         percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
         display_percent = str(int(percent_filesize))
+        stdout(" 100%")
         stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
         sys.exit(0)
     elif c.argc > 0:
@@ -65,6 +69,7 @@ def main():
                 archive_name = directory_name + ".zip"
                 percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                 display_percent = str(int(percent_filesize))
+                stdout(" 100%")  # end of the progress indicator
                 stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                 sys.exit(0)
             else:
@@ -77,6 +82,7 @@ def main():
                         archive_name = directory_name + ".zip"
                         percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                         display_percent = str(int(percent_filesize))
+                        stdout(" 100%")  # end of the progress indicator
                         stdout(
                             "[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                     else:
@@ -91,6 +97,7 @@ def main():
                 archive_name = directory_name + ".tar.bz2"
                 percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                 display_percent = str(int(percent_filesize))
+                stdout(" 100%")  # end of the progress indicator
                 stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                 sys.exit(0)
             else:
@@ -104,6 +111,7 @@ def main():
                         archive_name = directory_name + ".tar.bz2"
                         percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                         display_percent = str(int(percent_filesize))
+                        stdout(" 100%")  # end of the progress indicator
                         stdout(
                             "[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                     else:
@@ -120,6 +128,7 @@ def main():
                     archive_name = directory_name + ".tar.gz"
                     percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                     display_percent = str(int(percent_filesize))
+                    stdout(" 100%")  # end of the progress indicator
                     stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                 else:
                     stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
@@ -135,11 +144,31 @@ def main():
         sys.exit(1)  # exit
 
 
+def advance_progress():
+    global PROGRESS_INDICATOR
+    if PROGRESS_INDICATOR <= 50:
+        sys.stdout.write("=")
+        sys.stdout.flush()
+        PROGRESS_INDICATOR += 1
+    elif PROGRESS_INDICATOR <= 100:
+        sys.stdout.write("\b" * (PROGRESS_INDICATOR - 50))
+        sys.stdout.flush()
+        sys.stdout.write("-" * (PROGRESS_INDICATOR - 50))
+        sys.stdout.flush()
+        PROGRESS_INDICATOR += 1
+    else:
+        sys.stdout.write("\b" * 50)
+        sys.stdout.flush()
+        PROGRESS_INDICATOR = 1
+
+
 def exclude_files(tarinfo):
     the_basename = os.path.basename(tarinfo.name)
     if the_basename == ".DS_Store":
+        advance_progress()
         return None
     else:
+        advance_progress()
         return tarinfo
 
 
@@ -218,8 +247,9 @@ def package_zip(archive_name, root_directory):
         for zip_file in archive_file_list:
             # do not include OS X .DS_Store files in archives
             if os.path.basename(zip_file) == ".DS_Store":
-                pass
+                advance_progress()  # advance the progress bar and do nothing (do not save these in archive)
             else:
+                advance_progress()
                 zipper.write(zip_file, compress_type=compression)
         zipper.close()
 
