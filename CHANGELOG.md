@@ -1,4 +1,4 @@
-## Version 0.9.3
+## Version 0.9.4
 
 - **bugfix**: fixed Unicode error on Windows
 - updated in-application documentation
