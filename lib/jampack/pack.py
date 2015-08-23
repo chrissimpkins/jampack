@@ -9,6 +9,7 @@
 
 import os
 import sys
+import platform
 import shutil
 import tarfile
 import zipfile
@@ -23,10 +24,11 @@ PROGRESS_INDICATOR = 1
 
 # Application start
 def main():
-    import sys
     from Naked.commandline import Command
 
     global PROGRESS_INDICATOR
+
+    user_platform = platform.system()
 
     # ------------------------------------------------------------------------------------------
     # [ Instantiate Naked framework command line object ]
@@ -59,7 +61,10 @@ def main():
         percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
         display_percent = str(int(percent_filesize))
         stdout(" 100%")
-        stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+        if user_platform == "Windows":
+            stdout(archive_name + " created " + "[~" + display_percent + "% original]")
+        else:
+            stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
         sys.exit(0)
     elif c.argc > 0:
         if c.arg0 == "zip":
@@ -72,7 +77,10 @@ def main():
                 percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                 display_percent = str(int(percent_filesize))
                 stdout(" 100%")  # end of the progress indicator
-                stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                if user_platform == "Windows":
+                    stdout(archive_name + " created " + "[~" + display_percent + "% original]")
+                else:
+                    stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                 sys.exit(0)
             else:
                 directory_list = c.argv[1:]
@@ -86,10 +94,15 @@ def main():
                         percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                         display_percent = str(int(percent_filesize))
                         stdout(" 100%")  # end of the progress indicator
-                        stdout(
-                            "[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                        if user_platform == "Windows":
+                            stdout(archive_name + " created " + "[~" + display_percent + "% original]")
+                        else:
+                            stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                     else:
-                        stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
+                        if user_platform == "Windows":
+                            stderr(a_directory + " is not a directory path")
+                        else:
+                            stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
                 sys.exit(0)
         elif c.arg0 == "bz2":
             if c.argc == 1:
@@ -101,7 +114,10 @@ def main():
                 percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                 display_percent = str(int(percent_filesize))
                 stdout(" 100%")  # end of the progress indicator
-                stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                if user_platform == "Windows":
+                    stdout(archive_name + " created " + "[~" + display_percent + "% original]")
+                else:
+                    stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                 sys.exit(0)
             else:
                 # bz2 pack one or more explicitly set directory
@@ -116,10 +132,15 @@ def main():
                         percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                         display_percent = str(int(percent_filesize))
                         stdout(" 100%")  # end of the progress indicator
-                        stdout(
-                            "[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                        if user_platform == "Windows":
+                            stdout(archive_name + " created " + "[~" + display_percent + "% original]")
+                        else:
+                            stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                     else:
-                        stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
+                        if user_platform == "Windows":
+                            stderr(a_directory + " is not a directory path")
+                        else:
+                            stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
 
                 sys.exit(0)
         else:
@@ -134,9 +155,15 @@ def main():
                     percent_filesize = (100 * (get_file_size(archive_name) / float(directory_size)))
                     display_percent = str(int(percent_filesize))
                     stdout(" 100%")  # end of the progress indicator
-                    stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
+                    if user_platform == "Windows":
+                        stdout(archive_name + " created " + "[~" + display_percent + "% original]")
+                    else:
+                        stdout("[\033[32m✓\033[0m] " + archive_name + " created " + "[~" + display_percent + "% original]")
                 else:
-                    stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
+                    if user_platform == "Windows":
+                        stderr(a_directory + " is not a directory path")
+                    else:
+                        stderr("[\033[31mX\033[0m] " + a_directory + " is not a directory path")
 
             sys.exit(0)
 
@@ -145,7 +172,10 @@ def main():
     #  Message to provide to the user when all above conditional logic fails to meet a true condition
     # ------------------------------------------------------------------------------------------
     else:
-        print("[\033[31mX\033[0m] Could not complete the command that you entered.  Please try again.")
+        if user_platform == "Windows":
+            stdout("Could not complete the command that you entered.  Please try again.")
+        else:
+            stdout("[\033[31mX\033[0m] Could not complete the command that you entered.  Please try again.")
         sys.exit(1)  # exit
 
 
@@ -205,9 +235,13 @@ def package_targz(archive_name, root_directory):
             shutil.move(archive_gz_name, os.path.join(current_dir, archive_gz_name))  # move file to working directory
             os.chdir(current_dir)  # navigate back to user's current working directory
     except Exception as e:
+        user_platform = platform.system()
         os.chdir(current_dir)
         tar.close()
-        stderr("[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        if user_platform == "Windows":
+            stderr("jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        else:
+            stderr("[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
 
 
 def package_bzip2(archive_name, root_directory):
@@ -223,9 +257,14 @@ def package_bzip2(archive_name, root_directory):
             shutil.move(archive_gz_name, os.path.join(current_dir, archive_gz_name))  # move file to working directory
             os.chdir(current_dir)  # navigate back to user's current working directory
     except Exception as e:
+        user_platform = platform.system()
         os.chdir(current_dir)
         tar.close()
-        stderr("[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        if user_platform == "Windows":
+            stderr("jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        else:
+            stderr(
+                "[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
 
 
 def package_zip(archive_name, root_directory):
@@ -263,9 +302,14 @@ def package_zip(archive_name, root_directory):
             shutil.move(archive_zip_name, os.path.join(current_dir, archive_zip_name))
             os.chdir(current_dir)
     except Exception as e:
+        user_platform = platform.system()
         os.chdir(current_dir)
         zipper.close()
-        stderr("[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        if user_platform == "Windows":
+            stderr("jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
+        else:
+            stderr(
+                "[\033[31m!\033[0m] jampack: Unable to pack the directory '" + root_directory + "'. Error: " + str(e))
 
 if __name__ == '__main__':
     main()

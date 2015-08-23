@@ -9,6 +9,7 @@
 
 import zipfile
 import tarfile
+import platform
 from Naked.toolshed.system import stdout, stderr
 
 # start colorama for colored CLI std output
@@ -20,6 +21,8 @@ init()
 def main():
     import sys
     from Naked.commandline import Command
+
+    user_platform = platform.system()
 
     # ------------------------------------------------------------------------------------------
     # [ Instantiate Naked framework command line object ]
@@ -54,35 +57,62 @@ def main():
                     if zipfile.is_zipfile(archive_name):
                         zipper = zipfile.ZipFile(archive_name, mode="r")
                         zipper.extractall()
-                        stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked." )
+                        if user_platform == "Windows":
+                            stdout("'" + archive_name + "' was unpacked.")
+                        else:
+                            stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
                     else:
-                        stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a zip file")
+                        if user_platform == "Windows":
+                            stderr("'" + archive_name + "' does not appear to be a zip file")
+                        else:
+                            stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a zip file")
                 elif lowercase_archive_name.endswith('.tar.gz') or lowercase_archive_name.endswith('.tgz') or lowercase_archive_name.endswith('.tar.gzip'):
                     if tarfile.is_tarfile(archive_name):
                         tarball = tarfile.open(archive_name, mode="r:gz")
                         tarball.extractall()
-                        stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
+                        if user_platform == "Windows":
+                            stdout("'" + archive_name + "' was unpacked.")
+                        else:
+                            stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
                     else:
-                        stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a tar archive")
+                        if user_platform == "Windows":
+                            stderr("'" + archive_name + "' does not appear to be a tar archive")
+                        else:
+                            stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a tar archive")
                 elif lowercase_archive_name.endswith('.tar.bz2') or lowercase_archive_name.endswith('.tar.bzip2'):
                     if tarfile.is_tarfile(archive_name):
                         bzball = tarfile.open(archive_name, mode="r:bz2")
                         bzball.extractall()
-                        stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
+                        if user_platform == "Windows":
+                            stdout("'" + archive_name + "' was unpacked.")
+                        else:
+                            stdout("[\033[32m✓\033[0m] '" + archive_name + "' was unpacked.")
                     else:
-                        stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a tar archive")
+                        if user_platform == "Windows":
+                            stderr("'" + archive_name + "' does not appear to be a tar archive")
+                        else:
+                            stderr("[\033[31m!\033[0m] '" + archive_name + "' does not appear to be a tar archive")
                 else:
-                    stderr("[\033[31m!\033[0m] jampack: Unable to identify the archive type for '" + archive_name + "'. This archive was not unpacked. Please check the file extension and try again.")
+                    if user_platform == "Windows":
+                        stderr("Unable to identify the archive type for '" + archive_name + "'. This archive was not unpacked. Please check the file extension and try again.")
+                    else:
+                        stderr("[\033[31m!\033[0m] Unable to identify the archive type for '" + archive_name + "'. This archive was not unpacked. Please check the file extension and try again.")
         except Exception as e:
-            stderr(
-                "[\033[31m!\033[0m] jampack: Unable to unpack the archive '" + archive_name + "'. Error: " + str(e))
+            if user_platform == "Windows":
+                stderr("Unable to unpack the archive '" + archive_name + "'. Error: " + str(e))
+            else:
+                stderr(
+                    "[\033[31m!\033[0m] Unable to unpack the archive '" + archive_name + "'. Error: " + str(e))
 
     # ------------------------------------------------------------------------------------------
     # [ DEFAULT MESSAGE FOR MATCH FAILURE ]
     #  Message to provide to the user when all above conditional logic fails to meet a true condition
     # ------------------------------------------------------------------------------------------
     else:
-        print("[\033[31mX\033[0m] Could not complete the command that you entered.  Please try again.")
+        if user_platform == "Windows":
+            print("Could not complete the command that you entered.  Please try again.")
+        else:
+            print("[\033[31mX\033[0m] Could not complete the command that you entered.  Please try again.")
         sys.exit(1)  # exit
 
 if __name__ == '__main__':
