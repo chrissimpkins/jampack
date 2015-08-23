@@ -1,6 +1,7 @@
 ## Version 0.9.3
 
 - **bugfix**: fixed Unicode error on Windows
+- updated in-application documentation
 
 ## Version 0.9.2
 

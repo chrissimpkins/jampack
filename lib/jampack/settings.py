@@ -43,7 +43,7 @@ help = """
  Archive and Compress Directory
  ==============================
 
-   jam [zip|bz] [directory path]
+   jam [zip|bz2] [directory path]
 
  The default archive type is a tar.gz compressed archive if you do not include a secondary command.  The default path is the current working directory if you do not include a directory path.
 
