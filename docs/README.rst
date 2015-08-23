@@ -3,7 +3,7 @@ Source Repository: `<https://github.com/chrissimpkins/jampack>`_
 What is JamPack?
 ----------------------------
 
-JamPack includes the executables ``jam`` and ``unjam`` that provide a simple approach to pack and unpack tar.gz, tar.bz2, and zip file archives, respectively.  No more alphabet soup.
+JamPack includes the executables ``jam`` and ``unjam`` that provide a simple approach to pack and unpack tar.gz, tar.bz2, and zip file archives, respectively.  No more alphabet soup. JamPack works on Linux, OS X, and Windows platforms.
 
 
 Install
